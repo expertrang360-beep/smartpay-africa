@@ -9,12 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WalletRouteImport } from './routes/wallet'
+import { Route as ReferralsRouteImport } from './routes/referrals'
 import { Route as ElectricityRouteImport } from './routes/electricity'
 import { Route as DataRouteImport } from './routes/data'
 import { Route as CableRouteImport } from './routes/cable'
 import { Route as AirtimeRouteImport } from './routes/airtime'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TransactionsIndexRouteImport } from './routes/transactions.index'
+import { Route as WalletFundRouteImport } from './routes/wallet.fund'
+import { Route as TransactionsIdRouteImport } from './routes/transactions.$id'
 
+const WalletRoute = WalletRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReferralsRoute = ReferralsRouteImport.update({
+  id: '/referrals',
+  path: '/referrals',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ElectricityRoute = ElectricityRouteImport.update({
   id: '/electricity',
   path: '/electricity',
@@ -40,6 +55,21 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TransactionsIndexRoute = TransactionsIndexRouteImport.update({
+  id: '/transactions/',
+  path: '/transactions/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WalletFundRoute = WalletFundRouteImport.update({
+  id: '/fund',
+  path: '/fund',
+  getParentRoute: () => WalletRoute,
+} as any)
+const TransactionsIdRoute = TransactionsIdRouteImport.update({
+  id: '/transactions/$id',
+  path: '/transactions/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +77,11 @@ export interface FileRoutesByFullPath {
   '/cable': typeof CableRoute
   '/data': typeof DataRoute
   '/electricity': typeof ElectricityRoute
+  '/referrals': typeof ReferralsRoute
+  '/wallet': typeof WalletRouteWithChildren
+  '/transactions/$id': typeof TransactionsIdRoute
+  '/wallet/fund': typeof WalletFundRoute
+  '/transactions/': typeof TransactionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +89,11 @@ export interface FileRoutesByTo {
   '/cable': typeof CableRoute
   '/data': typeof DataRoute
   '/electricity': typeof ElectricityRoute
+  '/referrals': typeof ReferralsRoute
+  '/wallet': typeof WalletRouteWithChildren
+  '/transactions/$id': typeof TransactionsIdRoute
+  '/wallet/fund': typeof WalletFundRoute
+  '/transactions': typeof TransactionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +102,49 @@ export interface FileRoutesById {
   '/cable': typeof CableRoute
   '/data': typeof DataRoute
   '/electricity': typeof ElectricityRoute
+  '/referrals': typeof ReferralsRoute
+  '/wallet': typeof WalletRouteWithChildren
+  '/transactions/$id': typeof TransactionsIdRoute
+  '/wallet/fund': typeof WalletFundRoute
+  '/transactions/': typeof TransactionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/airtime' | '/cable' | '/data' | '/electricity'
+  fullPaths:
+    | '/'
+    | '/airtime'
+    | '/cable'
+    | '/data'
+    | '/electricity'
+    | '/referrals'
+    | '/wallet'
+    | '/transactions/$id'
+    | '/wallet/fund'
+    | '/transactions/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/airtime' | '/cable' | '/data' | '/electricity'
-  id: '__root__' | '/' | '/airtime' | '/cable' | '/data' | '/electricity'
+  to:
+    | '/'
+    | '/airtime'
+    | '/cable'
+    | '/data'
+    | '/electricity'
+    | '/referrals'
+    | '/wallet'
+    | '/transactions/$id'
+    | '/wallet/fund'
+    | '/transactions'
+  id:
+    | '__root__'
+    | '/'
+    | '/airtime'
+    | '/cable'
+    | '/data'
+    | '/electricity'
+    | '/referrals'
+    | '/wallet'
+    | '/transactions/$id'
+    | '/wallet/fund'
+    | '/transactions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,10 +153,28 @@ export interface RootRouteChildren {
   CableRoute: typeof CableRoute
   DataRoute: typeof DataRoute
   ElectricityRoute: typeof ElectricityRoute
+  ReferralsRoute: typeof ReferralsRoute
+  WalletRoute: typeof WalletRouteWithChildren
+  TransactionsIdRoute: typeof TransactionsIdRoute
+  TransactionsIndexRoute: typeof TransactionsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wallet': {
+      id: '/wallet'
+      path: '/wallet'
+      fullPath: '/wallet'
+      preLoaderRoute: typeof WalletRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/referrals': {
+      id: '/referrals'
+      path: '/referrals'
+      fullPath: '/referrals'
+      preLoaderRoute: typeof ReferralsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/electricity': {
       id: '/electricity'
       path: '/electricity'
@@ -116,8 +210,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/transactions/': {
+      id: '/transactions/'
+      path: '/transactions'
+      fullPath: '/transactions/'
+      preLoaderRoute: typeof TransactionsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wallet/fund': {
+      id: '/wallet/fund'
+      path: '/fund'
+      fullPath: '/wallet/fund'
+      preLoaderRoute: typeof WalletFundRouteImport
+      parentRoute: typeof WalletRoute
+    }
+    '/transactions/$id': {
+      id: '/transactions/$id'
+      path: '/transactions/$id'
+      fullPath: '/transactions/$id'
+      preLoaderRoute: typeof TransactionsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
+
+interface WalletRouteChildren {
+  WalletFundRoute: typeof WalletFundRoute
+}
+
+const WalletRouteChildren: WalletRouteChildren = {
+  WalletFundRoute: WalletFundRoute,
+}
+
+const WalletRouteWithChildren =
+  WalletRoute._addFileChildren(WalletRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -125,6 +251,10 @@ const rootRouteChildren: RootRouteChildren = {
   CableRoute: CableRoute,
   DataRoute: DataRoute,
   ElectricityRoute: ElectricityRoute,
+  ReferralsRoute: ReferralsRoute,
+  WalletRoute: WalletRouteWithChildren,
+  TransactionsIdRoute: TransactionsIdRoute,
+  TransactionsIndexRoute: TransactionsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
