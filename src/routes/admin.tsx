@@ -101,7 +101,7 @@ function Admin() {
                 <YAxis tick={{ fontSize: 10, fill: "oklch(0.52 0.02 258)" }} axisLine={false} tickLine={false} width={40} />
                 <Tooltip
                   contentStyle={{ background: "white", border: "1px solid oklch(0.92 0.008 250)", borderRadius: 12, fontSize: 12 }}
-                  formatter={(v: number) => formatNaira(v)}
+                  formatter={(v) => formatNaira(Number(v))}
                 />
                 <Area type="monotone" dataKey="volume" stroke="oklch(0.58 0.22 260)" strokeWidth={2} fill="url(#g1)" />
               </AreaChart>
@@ -117,7 +117,7 @@ function Admin() {
                 <CartesianGrid stroke="oklch(0.92 0.008 250)" strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="name" tick={{ fontSize: 10, fill: "oklch(0.52 0.02 258)" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 10, fill: "oklch(0.52 0.02 258)" }} axisLine={false} tickLine={false} width={40} />
-                <Tooltip formatter={(v: number) => formatNaira(v)} contentStyle={{ background: "white", border: "1px solid oklch(0.92 0.008 250)", borderRadius: 12, fontSize: 12 }} />
+                <Tooltip formatter={(v) => formatNaira(Number(v))} contentStyle={{ background: "white", border: "1px solid oklch(0.92 0.008 250)", borderRadius: 12, fontSize: 12 }} />
                 <Bar dataKey="value" fill="oklch(0.58 0.22 260)" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
