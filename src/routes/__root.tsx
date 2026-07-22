@@ -53,10 +53,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1" },
-      { title: "Smartpay — Instant airtime, data, bills & power" },
+      { title: "Payroxa — Instant airtime, data, bills & power" },
       { name: "description", content: "Fintech-grade VTU for Nigeria. Buy airtime, data, electricity tokens, and cable TV in seconds — with smart routing to the cheapest, fastest provider." },
-      { name: "theme-color", content: "#2563eb" },
-      { property: "og:title", content: "Smartpay — Fintech-grade VTU for Nigeria" },
+      { name: "theme-color", content: "#1D4ED8" },
+      { property: "og:title", content: "Payroxa — Fintech-grade VTU for Nigeria" },
       { property: "og:description", content: "Airtime, data, electricity, cable TV. Instant. Reliable. Cheaper." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

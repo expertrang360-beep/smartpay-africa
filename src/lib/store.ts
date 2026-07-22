@@ -69,7 +69,7 @@ const genId = () => crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)
 
 const seed: UserState = {
   name: "Chidi Obi",
-  email: "chidi@smartpay.ng",
+  email: "chidi@payroxa.ng",
   phone: "08031234567",
   pin: "1234",
   balance: 142500,
@@ -166,7 +166,7 @@ export const useStore = create<UserState & Actions>()(
       reset: () => set(seed),
     }),
     {
-      name: "smartpay-store",
+      name: "payroxa-store",
       onRehydrateStorage: () => (state) => {
         if (state?.darkMode && typeof document !== "undefined") {
           document.documentElement.classList.add("dark");

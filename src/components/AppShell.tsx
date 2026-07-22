@@ -28,7 +28,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Zap className="size-5" strokeWidth={2.5} />
             </div>
             <div>
-              <div className="text-lg font-bold tracking-tight">Smartpay</div>
+              <div className="text-lg font-bold tracking-tight">Payroxa</div>
               <div className="text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground">Fintech Core</div>
             </div>
           </div>

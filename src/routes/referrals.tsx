@@ -38,7 +38,7 @@ function Referrals() {
             </button>
             <button
               onClick={() => {
-                if (navigator.share) navigator.share({ title: "Join Smartpay", text: `Sign up with my code ${referralCode}`, url: link });
+                if (navigator.share) navigator.share({ title: "Join Payroxa", text: `Sign up with my code ${referralCode}`, url: link });
                 else { navigator.clipboard?.writeText(link); toast.success("Link copied"); }
               }}
               className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-white/15 py-2 text-xs font-semibold backdrop-blur ring-1 ring-white/20"
