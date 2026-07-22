@@ -10,10 +10,19 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WalletRouteImport } from './routes/wallet'
+import { Route as TransfersRouteImport } from './routes/transfers'
+import { Route as SupportRouteImport } from './routes/support'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as RewardsRouteImport } from './routes/rewards'
 import { Route as ReferralsRouteImport } from './routes/referrals'
+import { Route as MerchantsRouteImport } from './routes/merchants'
 import { Route as ElectricityRouteImport } from './routes/electricity'
 import { Route as DataRouteImport } from './routes/data'
+import { Route as CardsRouteImport } from './routes/cards'
 import { Route as CableRouteImport } from './routes/cable'
+import { Route as BusinessRouteImport } from './routes/business'
+import { Route as BillsRouteImport } from './routes/bills'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AirtimeRouteImport } from './routes/airtime'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -26,9 +35,34 @@ const WalletRoute = WalletRouteImport.update({
   path: '/wallet',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TransfersRoute = TransfersRouteImport.update({
+  id: '/transfers',
+  path: '/transfers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RewardsRoute = RewardsRouteImport.update({
+  id: '/rewards',
+  path: '/rewards',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReferralsRoute = ReferralsRouteImport.update({
   id: '/referrals',
   path: '/referrals',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MerchantsRoute = MerchantsRouteImport.update({
+  id: '/merchants',
+  path: '/merchants',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ElectricityRoute = ElectricityRouteImport.update({
@@ -41,9 +75,29 @@ const DataRoute = DataRouteImport.update({
   path: '/data',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CardsRoute = CardsRouteImport.update({
+  id: '/cards',
+  path: '/cards',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CableRoute = CableRouteImport.update({
   id: '/cable',
   path: '/cable',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BusinessRoute = BusinessRouteImport.update({
+  id: '/business',
+  path: '/business',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BillsRoute = BillsRouteImport.update({
+  id: '/bills',
+  path: '/bills',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AirtimeRoute = AirtimeRouteImport.update({
@@ -81,10 +135,19 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/airtime': typeof AirtimeRoute
+  '/analytics': typeof AnalyticsRoute
+  '/bills': typeof BillsRoute
+  '/business': typeof BusinessRoute
   '/cable': typeof CableRoute
+  '/cards': typeof CardsRoute
   '/data': typeof DataRoute
   '/electricity': typeof ElectricityRoute
+  '/merchants': typeof MerchantsRoute
   '/referrals': typeof ReferralsRoute
+  '/rewards': typeof RewardsRoute
+  '/settings': typeof SettingsRoute
+  '/support': typeof SupportRoute
+  '/transfers': typeof TransfersRoute
   '/wallet': typeof WalletRouteWithChildren
   '/transactions/$id': typeof TransactionsIdRoute
   '/wallet/fund': typeof WalletFundRoute
@@ -94,10 +157,19 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/airtime': typeof AirtimeRoute
+  '/analytics': typeof AnalyticsRoute
+  '/bills': typeof BillsRoute
+  '/business': typeof BusinessRoute
   '/cable': typeof CableRoute
+  '/cards': typeof CardsRoute
   '/data': typeof DataRoute
   '/electricity': typeof ElectricityRoute
+  '/merchants': typeof MerchantsRoute
   '/referrals': typeof ReferralsRoute
+  '/rewards': typeof RewardsRoute
+  '/settings': typeof SettingsRoute
+  '/support': typeof SupportRoute
+  '/transfers': typeof TransfersRoute
   '/wallet': typeof WalletRouteWithChildren
   '/transactions/$id': typeof TransactionsIdRoute
   '/wallet/fund': typeof WalletFundRoute
@@ -108,10 +180,19 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/airtime': typeof AirtimeRoute
+  '/analytics': typeof AnalyticsRoute
+  '/bills': typeof BillsRoute
+  '/business': typeof BusinessRoute
   '/cable': typeof CableRoute
+  '/cards': typeof CardsRoute
   '/data': typeof DataRoute
   '/electricity': typeof ElectricityRoute
+  '/merchants': typeof MerchantsRoute
   '/referrals': typeof ReferralsRoute
+  '/rewards': typeof RewardsRoute
+  '/settings': typeof SettingsRoute
+  '/support': typeof SupportRoute
+  '/transfers': typeof TransfersRoute
   '/wallet': typeof WalletRouteWithChildren
   '/transactions/$id': typeof TransactionsIdRoute
   '/wallet/fund': typeof WalletFundRoute
@@ -123,10 +204,19 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/airtime'
+    | '/analytics'
+    | '/bills'
+    | '/business'
     | '/cable'
+    | '/cards'
     | '/data'
     | '/electricity'
+    | '/merchants'
     | '/referrals'
+    | '/rewards'
+    | '/settings'
+    | '/support'
+    | '/transfers'
     | '/wallet'
     | '/transactions/$id'
     | '/wallet/fund'
@@ -136,10 +226,19 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/airtime'
+    | '/analytics'
+    | '/bills'
+    | '/business'
     | '/cable'
+    | '/cards'
     | '/data'
     | '/electricity'
+    | '/merchants'
     | '/referrals'
+    | '/rewards'
+    | '/settings'
+    | '/support'
+    | '/transfers'
     | '/wallet'
     | '/transactions/$id'
     | '/wallet/fund'
@@ -149,10 +248,19 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/airtime'
+    | '/analytics'
+    | '/bills'
+    | '/business'
     | '/cable'
+    | '/cards'
     | '/data'
     | '/electricity'
+    | '/merchants'
     | '/referrals'
+    | '/rewards'
+    | '/settings'
+    | '/support'
+    | '/transfers'
     | '/wallet'
     | '/transactions/$id'
     | '/wallet/fund'
@@ -163,10 +271,19 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AirtimeRoute: typeof AirtimeRoute
+  AnalyticsRoute: typeof AnalyticsRoute
+  BillsRoute: typeof BillsRoute
+  BusinessRoute: typeof BusinessRoute
   CableRoute: typeof CableRoute
+  CardsRoute: typeof CardsRoute
   DataRoute: typeof DataRoute
   ElectricityRoute: typeof ElectricityRoute
+  MerchantsRoute: typeof MerchantsRoute
   ReferralsRoute: typeof ReferralsRoute
+  RewardsRoute: typeof RewardsRoute
+  SettingsRoute: typeof SettingsRoute
+  SupportRoute: typeof SupportRoute
+  TransfersRoute: typeof TransfersRoute
   WalletRoute: typeof WalletRouteWithChildren
   TransactionsIdRoute: typeof TransactionsIdRoute
   TransactionsIndexRoute: typeof TransactionsIndexRoute
@@ -181,11 +298,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WalletRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/transfers': {
+      id: '/transfers'
+      path: '/transfers'
+      fullPath: '/transfers'
+      preLoaderRoute: typeof TransfersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rewards': {
+      id: '/rewards'
+      path: '/rewards'
+      fullPath: '/rewards'
+      preLoaderRoute: typeof RewardsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/referrals': {
       id: '/referrals'
       path: '/referrals'
       fullPath: '/referrals'
       preLoaderRoute: typeof ReferralsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/merchants': {
+      id: '/merchants'
+      path: '/merchants'
+      fullPath: '/merchants'
+      preLoaderRoute: typeof MerchantsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/electricity': {
@@ -202,11 +354,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DataRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cards': {
+      id: '/cards'
+      path: '/cards'
+      fullPath: '/cards'
+      preLoaderRoute: typeof CardsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cable': {
       id: '/cable'
       path: '/cable'
       fullPath: '/cable'
       preLoaderRoute: typeof CableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/business': {
+      id: '/business'
+      path: '/business'
+      fullPath: '/business'
+      preLoaderRoute: typeof BusinessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bills': {
+      id: '/bills'
+      path: '/bills'
+      fullPath: '/bills'
+      preLoaderRoute: typeof BillsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/airtime': {
@@ -269,10 +449,19 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AirtimeRoute: AirtimeRoute,
+  AnalyticsRoute: AnalyticsRoute,
+  BillsRoute: BillsRoute,
+  BusinessRoute: BusinessRoute,
   CableRoute: CableRoute,
+  CardsRoute: CardsRoute,
   DataRoute: DataRoute,
   ElectricityRoute: ElectricityRoute,
+  MerchantsRoute: MerchantsRoute,
   ReferralsRoute: ReferralsRoute,
+  RewardsRoute: RewardsRoute,
+  SettingsRoute: SettingsRoute,
+  SupportRoute: SupportRoute,
+  TransfersRoute: TransfersRoute,
   WalletRoute: WalletRouteWithChildren,
   TransactionsIdRoute: TransactionsIdRoute,
   TransactionsIndexRoute: TransactionsIndexRoute,
