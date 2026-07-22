@@ -1,152 +1,223 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Phone, Wifi, Zap, Tv, Wallet, Plus, ArrowRight, Sparkles, TrendingUp } from "lucide-react";
+import { useMemo } from "react";
+import {
+  TrendingUp, Wallet as WalletIcon, ArrowUpRight, Sparkles,
+  Users, ShieldCheck, ReceiptText, Rocket, Zap,
+} from "lucide-react";
+import {
+  ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid,
+  BarChart, Bar, PieChart, Pie, Cell, Legend,
+} from "recharts";
 import { useStore } from "@/lib/store";
 import { formatNaira } from "@/lib/format";
-import { AppShell } from "@/components/AppShell";
+import { AppShell, PageContainer } from "@/components/AppShell";
+import { WalletCard } from "@/components/payroxa/WalletCard";
+import { QuickActions } from "@/components/payroxa/QuickActions";
+import { StatCard } from "@/components/payroxa/StatCard";
+import { NotificationsCard } from "@/components/payroxa/NotificationsCard";
 import { TxnRow } from "@/components/TxnRow";
-import { NetworkChip } from "@/components/NetworkChip";
+import { Card, CardHeader, Badge, SectionLink } from "@/components/payroxa/Card";
 
 export const Route = createFileRoute("/")({
-  component: Home,
+  head: () => ({
+    meta: [
+      { title: "Dashboard — Payroxa" },
+      { name: "description", content: "Payroxa dashboard: wallet balance, quick actions, spending analytics, and recent activity." },
+      { property: "og:title", content: "Payroxa Dashboard" },
+      { property: "og:description", content: "Enterprise fintech control center for your Payroxa wallet, bills, cards and rewards." },
+    ],
+  }),
+  component: Dashboard,
 });
 
-const services = [
-  { to: "/airtime", label: "Airtime", icon: Phone, color: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300" },
-  { to: "/data", label: "Data", icon: Wifi, color: "bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300" },
-  { to: "/electricity", label: "Power", icon: Zap, color: "bg-yellow-100 text-yellow-700 dark:bg-yellow-500/15 dark:text-yellow-300" },
-  { to: "/cable", label: "Cable", icon: Tv, color: "bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300" },
-  { to: "/wallet", label: "Wallet", icon: Wallet, color: "bg-primary-soft text-primary" },
-] as const;
+const revenueSeries = [
+  { m: "Jan", revenue: 420, expense: 260 }, { m: "Feb", revenue: 510, expense: 290 },
+  { m: "Mar", revenue: 480, expense: 310 }, { m: "Apr", revenue: 640, expense: 340 },
+  { m: "May", revenue: 720, expense: 380 }, { m: "Jun", revenue: 810, expense: 400 },
+  { m: "Jul", revenue: 940, expense: 420 }, { m: "Aug", revenue: 1050, expense: 460 },
+];
+const spendPie = [
+  { name: "Bills", value: 34, color: "oklch(0.48 0.24 264)" },
+  { name: "Transfers", value: 28, color: "oklch(0.72 0.17 162)" },
+  { name: "Airtime/Data", value: 18, color: "oklch(0.78 0.16 72)" },
+  { name: "Cards", value: 12, color: "oklch(0.62 0.22 25)" },
+  { name: "Other", value: 8, color: "oklch(0.52 0.02 258)" },
+];
+const spark = (base: number) =>
+  Array.from({ length: 12 }, (_, i) => ({ v: base + Math.round(Math.sin(i / 2) * base * 0.15) + i * (base * 0.02) }));
 
-function Home() {
-  const { name, balance, cashback, smartMode, transactions, frequent } = useStore();
-  const initials = name.split(" ").map((n) => n[0]).slice(0, 2).join("");
-  const recent = transactions.slice(0, 4);
+function Dashboard() {
+  const { name, transactions, prxPoints, level, kycProgress } = useStore();
+  const recent = transactions.slice(0, 6);
+  const totalIn = useMemo(() => transactions.filter((t) => t.amount > 0).reduce((a, t) => a + t.amount, 0), [transactions]);
+  const totalOut = useMemo(() => Math.abs(transactions.filter((t) => t.amount < 0).reduce((a, t) => a + t.amount, 0)), [transactions]);
 
   return (
     <AppShell>
-      {/* Greeting */}
-      <header className="flex items-center justify-between px-5 pt-8 pb-4">
-        <div>
-          <p className="text-xs font-medium text-muted-foreground">Good morning</p>
-          <h2 className="text-lg font-semibold tracking-tight">{name}</h2>
-        </div>
-        <div className="grid size-10 place-items-center rounded-full bg-primary-soft text-sm font-bold text-primary">
-          {initials}
-        </div>
-      </header>
-
-      {/* Wallet card */}
-      <section className="px-5">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-[oklch(0.54_0.22_262)] to-[oklch(0.42_0.24_268)] p-6 text-white shadow-brand">
-          <div className="absolute -right-10 -top-10 size-48 rounded-full bg-white/10 blur-3xl" />
-          <div className="absolute -left-16 -bottom-16 size-40 rounded-full bg-white/5 blur-3xl" />
-          <div className="relative">
-            <div className="flex items-start justify-between">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.2em] opacity-80">
-                Wallet balance
-              </span>
-              {smartMode && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider backdrop-blur">
-                  <Sparkles className="size-3" /> Smart
-                </span>
-              )}
-            </div>
-            <div className="mt-1 flex items-baseline gap-1">
-              <span className="text-3xl font-bold tracking-tight tabular-nums">{formatNaira(balance)}</span>
-            </div>
-            <div className="mt-1 text-[11px] opacity-80">
-              Cashback earned <span className="font-semibold tabular-nums">{formatNaira(cashback)}</span>
-            </div>
-            <div className="mt-6 flex gap-2.5">
-              <Link
-                to="/wallet/fund"
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-white py-2.5 text-sm font-semibold text-primary shadow-lg shadow-black/10 ring-1 ring-white/40 transition-transform hover:scale-[1.02]"
-              >
-                <Plus className="size-4" /> Add Money
-              </Link>
-              <Link
-                to="/wallet"
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-white/15 py-2.5 text-sm font-semibold backdrop-blur ring-1 ring-white/20 transition-transform hover:scale-[1.02]"
-              >
-                Withdraw
-              </Link>
-            </div>
+      <PageContainer className="space-y-6">
+        {/* Greeting */}
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
+          <div className="min-w-0">
+            <p className="text-xs font-medium text-muted-foreground">Welcome back</p>
+            <h1 className="truncate text-2xl font-bold tracking-tight md:text-3xl">Good afternoon, {name.split(" ")[0]}</h1>
           </div>
-        </div>
-      </section>
-
-      {/* Services grid */}
-      <section className="px-5 py-6">
-        <div className="grid grid-cols-5 gap-2">
-          {services.map((s) => (
-            <Link key={s.to} to={s.to} className="group flex flex-col items-center gap-1.5">
-              <div className={`grid size-14 place-items-center rounded-2xl ring-1 ring-border transition-all group-active:scale-95 group-hover:ring-primary/30 bg-surface`}>
-                <div className={`grid size-10 place-items-center rounded-xl ${s.color}`}>
-                  <s.icon className="size-5" strokeWidth={2.2} />
-                </div>
-              </div>
-              <span className="text-[11px] font-semibold text-foreground">{s.label}</span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Smart tip */}
-      {smartMode && (
-        <section className="px-5 pb-4">
-          <div className="flex items-center gap-3 rounded-2xl bg-primary-soft/60 p-3.5 ring-1 ring-primary/15">
-            <div className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-white">
-              <TrendingUp className="size-4" />
-            </div>
-            <div className="flex-1">
-              <div className="text-[11px] font-semibold uppercase tracking-widest text-primary">Smart saver tip</div>
-              <div className="text-xs text-foreground/80">9mobile 2GB is ₦40 cheaper than MTN today.</div>
-            </div>
-            <Link to="/data" className="rounded-lg bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground">
-              Swap
-            </Link>
-          </div>
-        </section>
-      )}
-
-      {/* Quick repeat */}
-      {frequent.length > 0 && (
-        <section className="px-5 pb-2">
-          <h3 className="text-sm font-semibold">Quick repeat</h3>
-          <div className="mt-3 flex gap-4 overflow-x-auto pb-2 no-scrollbar">
-            {frequent.map((f) => (
-              <Link
-                key={f.id}
-                to="/airtime"
-                search={{ phone: f.phone }}
-                className="group flex shrink-0 flex-col items-center gap-1.5"
-              >
-                <NetworkChip network={f.network as "MTN"} size={44} />
-                <span className="text-[10px] font-medium text-muted-foreground">{f.phone.slice(0, 4)}…</span>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Recent activity */}
-      <section className="px-5 py-4">
-        <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-sm font-semibold">Recent activity</h3>
-          <Link to="/transactions" className="inline-flex items-center gap-0.5 text-xs font-semibold text-primary">
-            See all <ArrowRight className="size-3" />
+          <Link to="/wallet/fund" className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-brand hover:opacity-95">
+            <Rocket className="size-4" /> Fund wallet
           </Link>
         </div>
-        <div className="space-y-2">
-          {recent.map((t) => <TxnRow key={t.id} txn={t} />)}
-          {recent.length === 0 && (
-            <div className="rounded-2xl bg-muted/40 p-6 text-center text-xs text-muted-foreground">
-              No transactions yet. Start with a top-up above.
-            </div>
-          )}
+
+        {/* Row 1: Wallet + KYC/Rewards */}
+        <div className="grid gap-5 lg:grid-cols-[2fr_1fr]">
+          <WalletCard />
+          <div className="grid gap-4">
+            <Card className="p-5">
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                <ShieldCheck className="size-3.5" /> Account verification
+              </div>
+              <div className="mt-3 flex items-end justify-between">
+                <div>
+                  <div className="text-2xl font-bold tabular-nums">{kycProgress}%</div>
+                  <p className="text-xs text-muted-foreground">Tier 3 in progress</p>
+                </div>
+                <Badge tone="warning">Action needed</Badge>
+              </div>
+              <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted">
+                <div className="h-full rounded-full bg-primary" style={{ width: `${kycProgress}%` }} />
+              </div>
+              <Link to="/settings" className="mt-4 inline-flex text-xs font-semibold text-primary">Complete verification →</Link>
+            </Card>
+            <Card className="bg-gradient-to-br from-secondary/20 to-transparent p-5">
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                <Sparkles className="size-3.5" /> Rewards · {level}
+              </div>
+              <div className="mt-2 text-2xl font-bold tabular-nums">{prxPoints.toLocaleString()} PRX</div>
+              <p className="mt-1 text-xs text-muted-foreground">1,180 pts to Platinum</p>
+              <Link to="/rewards" className="mt-3 inline-flex items-center gap-1 rounded-lg bg-foreground px-3 py-1.5 text-xs font-semibold text-background">
+                Redeem <ArrowUpRight className="size-3" />
+              </Link>
+            </Card>
+          </div>
         </div>
-      </section>
+
+        {/* Stat cards */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard label="Money in (30d)" value={formatNaira(totalIn, { compact: true })} change="+12.4%" trend="up" icon={ArrowUpRight} series={spark(80)} tone="success" />
+          <StatCard label="Money out (30d)" value={formatNaira(totalOut, { compact: true })} change="+3.1%" trend="up" icon={ReceiptText} series={spark(60)} tone="warning" />
+          <StatCard label="Cashback earned" value={formatNaira(useStore.getState().cashback)} change="+₦2,140" trend="up" icon={Sparkles} series={spark(40)} tone="primary" />
+          <StatCard label="Active beneficiaries" value={String(useStore.getState().beneficiaries.length)} change="+2 this month" trend="up" icon={Users} series={spark(30)} tone="primary" />
+        </div>
+
+        {/* Quick actions */}
+        <QuickActions />
+
+        {/* Charts row */}
+        <div className="grid gap-5 lg:grid-cols-[2fr_1fr]">
+          <Card>
+            <CardHeader
+              title="Revenue vs expenses"
+              subtitle="Last 8 months, all wallets"
+              icon={TrendingUp}
+              action={<Badge tone="success">+18.2%</Badge>}
+            />
+            <div className="p-4 pt-2">
+              <ResponsiveContainer width="100%" height={260}>
+                <AreaChart data={revenueSeries} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="rev" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="oklch(0.48 0.24 264)" stopOpacity={0.5} />
+                      <stop offset="100%" stopColor="oklch(0.48 0.24 264)" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="exp" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="oklch(0.72 0.17 162)" stopOpacity={0.4} />
+                      <stop offset="100%" stopColor="oklch(0.72 0.17 162)" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                  <XAxis dataKey="m" stroke="var(--color-muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
+                  <YAxis stroke="var(--color-muted-foreground)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `₦${v}k`} />
+                  <Tooltip contentStyle={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: 12, fontSize: 12 }} />
+                  <Area type="monotone" dataKey="revenue" stroke="oklch(0.48 0.24 264)" fill="url(#rev)" strokeWidth={2} />
+                  <Area type="monotone" dataKey="expense" stroke="oklch(0.72 0.17 162)" fill="url(#exp)" strokeWidth={2} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+
+          <Card>
+            <CardHeader title="Spending by category" subtitle="This month" icon={Zap} />
+            <div className="p-4">
+              <ResponsiveContainer width="100%" height={220}>
+                <PieChart>
+                  <Pie data={spendPie} dataKey="value" nameKey="name" innerRadius={50} outerRadius={80} paddingAngle={2}>
+                    {spendPie.map((s) => <Cell key={s.name} fill={s.color} />)}
+                  </Pie>
+                  <Legend iconType="circle" wrapperStyle={{ fontSize: 11 }} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+        </div>
+
+        {/* Recent activity + notifications */}
+        <div className="grid gap-5 lg:grid-cols-[2fr_1fr]">
+          <Card>
+            <CardHeader
+              title="Recent transactions"
+              icon={WalletIcon}
+              action={<SectionLink to="/transactions" label="See all" />}
+            />
+            <div className="space-y-2 p-3">
+              {recent.map((t) => <TxnRow key={t.id} txn={t} />)}
+            </div>
+          </Card>
+          <NotificationsCard />
+        </div>
+
+        {/* Bills due + provider bar chart */}
+        <div className="grid gap-5 lg:grid-cols-[1fr_1fr]">
+          <Card>
+            <CardHeader title="Upcoming payments" subtitle="Auto-detected from your history" />
+            <ul className="divide-y divide-border">
+              {[
+                { name: "EKEDC prepaid", when: "Tomorrow", amount: 15000, tone: "warning" as const },
+                { name: "DSTV Confam", when: "In 4 days", amount: 9300, tone: "info" as const },
+                { name: "MTN Data · 10GB", when: "In 8 days", amount: 4900, tone: "info" as const },
+              ].map((b) => (
+                <li key={b.name} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 p-4">
+                  <div className="min-w-0">
+                    <div className="truncate text-sm font-semibold">{b.name}</div>
+                    <div className="text-xs text-muted-foreground">Due {b.when}</div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-semibold tabular-nums">{formatNaira(b.amount)}</span>
+                    <button className="rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground">Pay now</button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </Card>
+          <Card>
+            <CardHeader title="Provider performance" subtitle="Smart Mode routing" />
+            <div className="p-4">
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={[
+                  { p: "SmartBill", ok: 98, fail: 2 },
+                  { p: "QuickVTU", ok: 94, fail: 6 },
+                  { p: "AfriPay", ok: 99, fail: 1 },
+                  { p: "PayHub", ok: 96, fail: 4 },
+                ]}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                  <XAxis dataKey="p" stroke="var(--color-muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
+                  <YAxis stroke="var(--color-muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
+                  <Tooltip contentStyle={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: 12, fontSize: 12 }} />
+                  <Bar dataKey="ok" stackId="a" fill="oklch(0.48 0.24 264)" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="fail" stackId="a" fill="oklch(0.62 0.22 25)" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+        </div>
+      </PageContainer>
     </AppShell>
   );
 }

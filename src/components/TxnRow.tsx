@@ -1,20 +1,28 @@
-import type { Transaction } from "@/lib/store";
+import type { Transaction, TxnKind } from "@/lib/store";
 import { formatNaira } from "@/lib/format";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "@tanstack/react-router";
-import { Phone, Wifi, Zap, Tv, ArrowDownToLine, ArrowUpFromLine, Gift, Users } from "lucide-react";
+import {
+  Phone, Wifi, Zap, Tv, ArrowDownToLine, ArrowUpFromLine, Gift, Users,
+  ArrowLeftRight, Globe, Ticket, CreditCard, type LucideIcon,
+} from "lucide-react";
 
-const iconMap = {
+const iconMap: Record<TxnKind, { icon: LucideIcon; bg: string }> = {
   airtime: { icon: Phone, bg: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300" },
   data: { icon: Wifi, bg: "bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300" },
   electricity: { icon: Zap, bg: "bg-yellow-100 text-yellow-700 dark:bg-yellow-500/15 dark:text-yellow-300" },
   cable: { icon: Tv, bg: "bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300" },
+  internet: { icon: Globe, bg: "bg-cyan-100 text-cyan-700 dark:bg-cyan-500/15 dark:text-cyan-300" },
+  betting: { icon: Ticket, bg: "bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-500/15 dark:text-fuchsia-300" },
+  giftcard: { icon: Gift, bg: "bg-pink-100 text-pink-700 dark:bg-pink-500/15 dark:text-pink-300" },
+  transfer: { icon: ArrowLeftRight, bg: "bg-primary-soft text-primary" },
   fund: { icon: ArrowDownToLine, bg: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300" },
   withdraw: { icon: ArrowUpFromLine, bg: "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300" },
   cashback: { icon: Gift, bg: "bg-pink-100 text-pink-700 dark:bg-pink-500/15 dark:text-pink-300" },
   referral: { icon: Users, bg: "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300" },
   bonus: { icon: Gift, bg: "bg-pink-100 text-pink-700 dark:bg-pink-500/15 dark:text-pink-300" },
-} as const;
+  card: { icon: CreditCard, bg: "bg-primary-soft text-primary" },
+};
 
 const statusStyle = {
   success: "bg-emerald-50 text-emerald-700 ring-emerald-600/15 dark:bg-emerald-500/10 dark:text-emerald-300",
@@ -23,21 +31,24 @@ const statusStyle = {
 };
 
 export function TxnRow({ txn }: { txn: Transaction }) {
-  const cfg = iconMap[txn.kind];
+  const cfg = iconMap[txn.kind] ?? iconMap.card;
   const Icon = cfg.icon;
   return (
     <Link
       to="/transactions/$id"
       params={{ id: txn.id }}
-      className="flex items-center gap-3 rounded-2xl bg-surface p-3 ring-1 ring-transparent transition-all hover:ring-border"
+      className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-2xl bg-surface p-3 ring-1 ring-border/60 transition-all hover:ring-primary/30 hover:shadow-card"
     >
-      <div className={`grid size-10 shrink-0 place-items-center rounded-xl ${cfg.bg}`}>
+      <div className={`grid size-11 shrink-0 place-items-center rounded-xl ${cfg.bg}`}>
         <Icon className="size-5" />
       </div>
-      <div className="min-w-0 flex-1">
-        <div className="truncate text-sm font-semibold">{txn.title}</div>
+      <div className="min-w-0">
+        <div className="flex items-center gap-2">
+          <span className="truncate text-sm font-semibold">{txn.title}</span>
+          {txn.category && <span className="hidden shrink-0 text-[10px] font-medium text-muted-foreground sm:inline">· {txn.category}</span>}
+        </div>
         <div className="truncate text-[11px] text-muted-foreground">
-          {txn.subtitle} · {formatDistanceToNow(txn.createdAt, { addSuffix: true })}
+          {txn.subtitle} · {txn.ref} · {formatDistanceToNow(txn.createdAt, { addSuffix: true })}
         </div>
       </div>
       <div className="text-right">
