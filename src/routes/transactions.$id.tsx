@@ -38,7 +38,7 @@ function TxnDetail() {
       txn!.token ? `Token:    ${txn!.token}` : "",
       txn!.providerName ? `Provider: ${txn!.providerName}` : "",
       "",
-      "Thanks for using Smartpay.",
+      "Thanks for using Payroxa.",
     ].filter(Boolean).join("\n");
     const url = URL.createObjectURL(new Blob([receipt], { type: "text/plain" }));
     const a = document.createElement("a");
