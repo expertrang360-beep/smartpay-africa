@@ -23,8 +23,8 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "Dashboard — Payroxa" },
       { name: "description", content: "Payroxa dashboard: wallet balance, quick actions, spending analytics, and recent activity." },
-      { property: "og:title", content: "Payroxa Dashboard" },
-      { property: "og:description", content: "Enterprise fintech control center for your Payroxa wallet, bills, cards and rewards." },
+      { property: "og:title", content: "Dashboard — Payroxa" },
+      { property: "og:description", content: "Payroxa dashboard: wallet balance, quick actions, spending analytics, and recent activity." },
     ],
   }),
   component: Dashboard,
